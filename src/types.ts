@@ -74,4 +74,4 @@ export interface InitOptions {
 }
 
 // Export random thing to ensure Webpack rebuilds when this file changes (it contains only interfaces).
-export default {}
+export const dummy = {}

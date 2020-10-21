@@ -3,9 +3,8 @@ import { debounce } from 'debounce'
 import pick from 'lodash/pick'
 import values from 'lodash/values'
 import { createBrush, createGlass, createPageElementHighlight, createTooltips } from './createElements'
-// Import default export from './types' as _typesDummy to ensure the files gets reloaded.
-// More info: https://github.com/TypeStrong/fork-ts-checker-webpack-plugin/issues/36.
-import _typesDummy, {
+import {
+  dummy,
   CreateBrushReturn,
   CreatePageElementHighlightReturn,
   ElementSelectorChangeCallback,
@@ -16,6 +15,10 @@ import _typesDummy, {
   InitOptions,
   State
 } from './types'
+
+// Import non-TypeScript value from './types' to ensure the files gets reloaded.
+// More info: https://github.com/TypeStrong/fork-ts-checker-webpack-plugin/issues/36.
+dummy
 
 const scriptKey = 'pickHtmlElementScript'
 const scriptOptionsKey = 'pickHtmlElementScriptOptions'
