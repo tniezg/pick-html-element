@@ -12,7 +12,7 @@ export const createBrush = (): CreateBrushReturn => {
   brush.style.transform = 'translate(-50%,-50%)'
   brush.style.pointerEvents = 'none'
   brush.style.opacity = '0'
-  brush.style.border = '2px solid #fff'
+  brush.style.border = '1px solid rgba(255,255,255,0.4)'
   brush.style.transition = 'opacity 500ms'
   brush.style.zIndex = `${maxZIndex - 1}`
   brush.style.transition = '200ms width, 200ms height, 200ms opacity'
