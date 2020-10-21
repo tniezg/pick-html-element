@@ -1,13 +1,15 @@
 import { CreateBrushReturn, CreateGlassReturn, CreatePageElementHighlightReturn, CreateTooltipsReturn } from './types'
+import { hexToRgbA } from './utilities/hexToRgba'
 
 const maxZIndex = 2147483647
 
-export const createBrush = (): CreateBrushReturn => {
+export const createBrush = (options): CreateBrushReturn => {
   const brush = document.createElement('div')
   let radius = 0
+  const { color } = options
 
   brush.style.borderRadius = '50%'
-  brush.style.background = 'rgba(255, 0, 0, 0.5)'
+  brush.style.background = hexToRgbA(color, 0.8)
   brush.style.position = 'absolute'
   brush.style.transform = 'translate(-50%,-50%)'
   brush.style.pointerEvents = 'none'
@@ -96,12 +98,13 @@ export const createGlass = (): CreateGlassReturn => {
   }
 }
 
-export const createPageElementHighlight = (): CreatePageElementHighlightReturn => {
+export const createPageElementHighlight = (options): CreatePageElementHighlightReturn => {
   const pageElementHighlight = document.createElement('div')
+  const { color } = options
 
   pageElementHighlight.style.position = 'absolute'
   pageElementHighlight.style.pointerEvents = 'none'
-  pageElementHighlight.style.background = 'rgba(255, 0, 0, 0.6)'
+  pageElementHighlight.style.background = hexToRgbA(color, 0.6)
   pageElementHighlight.style.boxSizing = 'border-box'
   pageElementHighlight.style.zIndex = `${maxZIndex - 2}`
   pageElementHighlight.style.opacity = '0'

@@ -175,11 +175,13 @@ const updateBrushPosition = (brush: CreateBrushReturn, x: number, y: number): vo
   brush.setPosition(x, y)
 }
 
-const createState = (): State => {
+const createState = (options): State => {
+  const { tint } = options
+
   return {
-    brush: createBrush(),
+    brush: createBrush({ color: tint }),
     glass: createGlass(),
-    pageElementHighlight: createPageElementHighlight(),
+    pageElementHighlight: createPageElementHighlight({ color: tint }),
     tooltips: createTooltips(),
     baseBrushRadius: 50,
     brushRadiusMultiplier: 1,
@@ -291,16 +293,16 @@ const createOnKeyDownListener = (state: State, updateStateElementSelector, optio
 }
 
 const init = (customOptions: InitOptions) => {
-  const state = createState()
   const defaultOptions: InitOptions = {
     hijackEvents: true,
     alternativeControls: true,
-    tint: '#f57542'
+    tint: '#ff3300'
   }
   const options: InitOptions = {
     ...customOptions,
     ...defaultOptions
   }
+  const state = createState(options)
 
   const updateStateElementSelector = (elementSelector: string): void => {
     state.elementSelector = elementSelector
