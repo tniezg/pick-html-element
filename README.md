@@ -10,7 +10,7 @@ This is a building block for applications and not to be used separately.
 
 To test the script on an example website, open `example/index.html` in Google Chrome.
 
-<!-- FIXME: show example website -->
+![Pick HTML element in action](./README-media/pick-html-element-example.gif)
 
 ## Development
 
