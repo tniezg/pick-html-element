@@ -69,7 +69,8 @@ export interface State {
 }
 
 export interface InitOptions {
-  hijackEvents: boolean
+  hijackEvents: boolean // Attept to stop keyboard shortcuts used by the tool to trigger regular page events.
+  alternativeControls: boolean // Add another set of keyboard shortcuts for performing the same actions by the tool.
   tint: string
 }
 

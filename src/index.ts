@@ -232,7 +232,15 @@ const createOnFocusListener = (state: State, listeners) => (): void => {
   state.glass.hideFocusRequest()
 }
 
-const createOnKeyDownListener = (state: State, updateStateElementSelector) => (event: KeyboardEvent): void => {
+const hijackEvent = (event) => {
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  event.stopPropagation()
+}
+
+const createOnKeyDownListener = (state: State, updateStateElementSelector, options) => (event: KeyboardEvent): void => {
+  const { hijackEvents } = options
+
   if (event.key === '-' || event.key === '_') {
     // Use _ as alias for -.
     const response = handleBrushDecrease({
@@ -241,6 +249,10 @@ const createOnKeyDownListener = (state: State, updateStateElementSelector) => (e
     })
 
     Object.assign(state, response)
+
+    if (hijackEvents) {
+      hijackEvent(event)
+    }
   } else if (event.key === '+' || event.key === '=') {
     // Use = as alias for +.
     const response = handleBrushRadiusIncrease({
@@ -249,22 +261,46 @@ const createOnKeyDownListener = (state: State, updateStateElementSelector) => (e
     })
 
     Object.assign(state, response)
+
+    if (hijackEvents) {
+      hijackEvent(event)
+    }
   } else if (event.key === 'Escape') {
     window[scriptKey].destroy()
+
+    if (hijackEvents) {
+      hijackEvent(event)
+    }
   } else if (event.key === 'Enter' || event.key === 'S') {
     if (state.elementSelector === null) {
       console.warn('No element selected.')
     } else {
+      console.info('Element picked.')
+
       const selectEvent = new CustomEvent(elementSelectEventName, {
         detail: { elementSelector: state.elementSelector }
       })
+
       window.dispatchEvent(selectEvent)
+    }
+
+    if (hijackEvents) {
+      hijackEvent(event)
     }
   }
 }
 
-const init = (_options: InitOptions) => {
+const init = (customOptions: InitOptions) => {
   const state = createState()
+  const defaultOptions: InitOptions = {
+    hijackEvents: true,
+    alternativeControls: true,
+    tint: '#f57542'
+  }
+  const options: InitOptions = {
+    ...customOptions,
+    ...defaultOptions
+  }
 
   const updateStateElementSelector = (elementSelector: string): void => {
     state.elementSelector = elementSelector
@@ -279,7 +315,7 @@ const init = (_options: InitOptions) => {
     onScrollOnce: createOnScrollOnceListener(state, listeners),
     onBlur: createOnBlurListener(state, listeners),
     onFocus: createOnFocusListener(state, listeners),
-    onKeyDown: createOnKeyDownListener(state, updateStateElementSelector)
+    onKeyDown: createOnKeyDownListener(state, updateStateElementSelector, { hijackEvents: options.hijackEvents })
   })
 
   appendAllTo(values(pick(state, ['glass', 'brush', 'pageElementHighlight', 'tooltips'])), document.body)
