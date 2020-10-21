@@ -6,7 +6,7 @@
 
 Creates a JavaScript file generating an interface for picking an HTML element on any website. The file needs to be injected into a website. It's a self-contained solution. It uses a mouse and keyboard for choosing an element on the page. The tool sends out an event when an element is picked so that another script can pick up the collected information and react to it.
 
-This is a building block for applications and not to be used separately.
+This is a building block for applications and not to be used separately. Selecting an element results in a CustomEvent called `pickHtmlElementScriptElementSelect` being sent. It contains a CSS selector which can be used to find the selected element on the page.
 
 To test the script on an example website, open `example/index.html` in Google Chrome.
 
