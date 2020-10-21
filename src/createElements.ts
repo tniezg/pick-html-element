@@ -106,7 +106,6 @@ export const createPageElementHighlight = (): CreatePageElementHighlightReturn =
   pageElementHighlight.style.zIndex = `${maxZIndex - 2}`
   pageElementHighlight.style.opacity = '0'
   pageElementHighlight.style.transition = 'top 1s, left 1s, width 1s, height 1s, opacity 1s'
-  pageElementHighlight.style.borderRadius = '6px'
 
   return {
     append: (parent) => {
