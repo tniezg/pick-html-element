@@ -194,6 +194,10 @@ const createOnMouseMoveListener = (state: State, updateStateElementSelector) => 
 const createOnMouseMoveOnceListener = (state: State, listeners) => (): void => {
   document.addEventListener('scroll', listeners.onScrollOnce, { once: true })
   state.brush.show()
+  // Call removeDimensions and removePosition to not animate dimensions and position when the highlight becomes
+  // visible again(ex.after scrolling the page).
+  state.pageElementHighlight.removeDimensions()
+  state.pageElementHighlight.removePosition()
   state.pageElementHighlight.show()
 }
 

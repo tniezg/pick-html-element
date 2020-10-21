@@ -129,6 +129,14 @@ export const createPageElementHighlight = (): CreatePageElementHighlightReturn =
     },
     hide: (): void => {
       pageElementHighlight.style.opacity = '0'
+    },
+    removePosition: () => {
+      pageElementHighlight.style.removeProperty('left')
+      pageElementHighlight.style.removeProperty('top')
+    },
+    removeDimensions: () => {
+      pageElementHighlight.style.removeProperty('width')
+      pageElementHighlight.style.removeProperty('height')
     }
   }
 }

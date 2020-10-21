@@ -21,6 +21,8 @@ export interface CreatePageElementHighlightReturn extends CreateElementReturn {
   setPosition: (x: number, y: number) => void
   show: () => void
   hide: () => void
+  removeDimensions: () => void
+  removePosition: () => void
 }
 
 export interface CreateTooltipsReturn extends CreateElementReturn {}
