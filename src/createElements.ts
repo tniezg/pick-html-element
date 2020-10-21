@@ -143,8 +143,9 @@ export const createPageElementHighlight = (options): CreatePageElementHighlightR
   }
 }
 
-export const createTooltips = (): CreateTooltipsReturn => {
+export const createTooltips = (options): CreateTooltipsReturn => {
   const tooltip = document.createElement('div')
+  const { alternativeControls } = options
 
   tooltip.style.position = 'fixed'
   tooltip.style.top = '0'
@@ -154,11 +155,22 @@ export const createTooltips = (): CreateTooltipsReturn => {
   tooltip.style.left = '0'
   tooltip.style.webkitTextStroke = '1px rgba(255, 255, 255, 0.1)'
   tooltip.style.fontWeight = '800'
-  tooltip.textContent = `
-    To select bigger or smaller elements, press + or - respectively.
-    To cancel, press Escape.
-    To confirm, press Enter or Shift + s.
-  `
+
+  if (alternativeControls) {
+    tooltip.textContent = `
+      To select a bigger element, press Shift + p or +.
+      To select a smaller element, press Shift + o or -.
+      To cancel, press Shift + x or Escape.
+      To confirm, press Shift + s or Enter.
+    `
+  } else {
+    tooltip.textContent = `
+      To select a bigger element, press Shift + p.
+      To select a smaller element, press Shift + o.
+      To cancel, press Shift + x.
+      To confirm, press Shift + s.
+    `
+  }
   tooltip.style.zIndex = `${maxZIndex}`
   tooltip.style.pointerEvents = 'none'
 

@@ -182,7 +182,7 @@ const createState = (options): State => {
     brush: createBrush({ color: tint }),
     glass: createGlass(),
     pageElementHighlight: createPageElementHighlight({ color: tint }),
-    tooltips: createTooltips(),
+    tooltips: createTooltips({ alternativeControls: options.alternativeControls }),
     baseBrushRadius: 50,
     brushRadiusMultiplier: 1,
     lastMouseEvent: null,
@@ -241,9 +241,9 @@ const hijackEvent = (event) => {
 }
 
 const createOnKeyDownListener = (state: State, updateStateElementSelector, options) => (event: KeyboardEvent): void => {
-  const { hijackEvents } = options
+  const { hijackEvents, alternativeControls } = options
 
-  if (event.key === '-' || event.key === '_') {
+  if (event.key === 'O' || (alternativeControls && event.key === '-') || (alternativeControls && event.key === '_')) {
     // Use _ as alias for -.
     const response = handleBrushDecrease({
       ...pick(state, ['baseBrushRadius', 'brush', 'lastMouseEvent', 'pageElementHighlight', 'brushRadiusMultiplier']),
@@ -255,7 +255,11 @@ const createOnKeyDownListener = (state: State, updateStateElementSelector, optio
     if (hijackEvents) {
       hijackEvent(event)
     }
-  } else if (event.key === '+' || event.key === '=') {
+  } else if (
+    event.key === 'P' ||
+    (alternativeControls && event.key === '+') ||
+    (alternativeControls && event.key === '=')
+  ) {
     // Use = as alias for +.
     const response = handleBrushRadiusIncrease({
       ...pick(state, ['baseBrushRadius', 'brush', 'lastMouseEvent', 'pageElementHighlight', 'brushRadiusMultiplier']),
@@ -267,13 +271,13 @@ const createOnKeyDownListener = (state: State, updateStateElementSelector, optio
     if (hijackEvents) {
       hijackEvent(event)
     }
-  } else if (event.key === 'Escape') {
+  } else if (event.key === 'X' || (alternativeControls && event.key === 'Escape')) {
     window[scriptKey].destroy()
 
     if (hijackEvents) {
       hijackEvent(event)
     }
-  } else if (event.key === 'Enter' || event.key === 'S') {
+  } else if (event.key === 'S' || (alternativeControls && event.key === 'Enter')) {
     if (state.elementSelector === null) {
       console.warn('No element selected.')
     } else {
@@ -302,7 +306,10 @@ const init = (customOptions: InitOptions) => {
     ...customOptions,
     ...defaultOptions
   }
-  const state = createState(options)
+  const state = createState({
+    alternativeControls: options.alternativeControls,
+    tint: options.tint
+  })
 
   const updateStateElementSelector = (elementSelector: string): void => {
     state.elementSelector = elementSelector
@@ -317,7 +324,10 @@ const init = (customOptions: InitOptions) => {
     onScrollOnce: createOnScrollOnceListener(state, listeners),
     onBlur: createOnBlurListener(state, listeners),
     onFocus: createOnFocusListener(state, listeners),
-    onKeyDown: createOnKeyDownListener(state, updateStateElementSelector, { hijackEvents: options.hijackEvents })
+    onKeyDown: createOnKeyDownListener(state, updateStateElementSelector, {
+      hijackEvents: options.hijackEvents,
+      alternativeControls: options.alternativeControls
+    })
   })
 
   appendAllTo(values(pick(state, ['glass', 'brush', 'pageElementHighlight', 'tooltips'])), document.body)
