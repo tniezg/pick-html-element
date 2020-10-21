@@ -1,0 +1,14 @@
+version: '3.0'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: node:14.10.0
+    working_dir: /app
+    volumes:
+      - '.:/app:delegated'
+      - pick-html-element_node-modules:/app/node_modules
+
+volumes:
+  pick-html-element_node-modules:

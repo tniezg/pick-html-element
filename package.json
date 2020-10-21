@@ -1,0 +1,42 @@
+{
+  "name": "pick-html-element",
+  "version": "1.0.0",
+  "description": "Creates an interface for picking HTML elements on any website.",
+  "main": "dist/index.js:",
+  "engines": {
+    "node": ">=14.10.0"
+  },
+  "scripts": {
+    "test": "jest --coverage --verbose",
+    "test:watch": "npm run test -- --watchAll",
+    "build": "webpack",
+    "build:watch": "webpack --watch",
+    "build:production": "NODE_ENV=production webpack",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --fix --ext .ts .",
+    "prettier": "prettier --check \"src/**/*.ts\"",
+    "prettier:fix": "prettier --write \"src/**/*.ts\""
+  },
+  "author": "playfulcorgi",
+  "license": "MIT",
+  "dependencies": {
+    "css-selector-generator": "^2.1.2",
+    "debounce": "^1.2.0",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.6",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "jest": "^26.0.1",
+    "prettier": "2.0.5",
+    "ts-jest": "^26.0.0",
+    "ts-loader": "^7.0.0",
+    "typescript": "^3.9.2",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}

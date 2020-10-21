@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "moduleResolution": "node",
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}
