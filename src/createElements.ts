@@ -15,7 +15,7 @@ export const createBrush = (): CreateBrushReturn => {
   brush.style.border = '2px solid #fff'
   brush.style.transition = 'opacity 500ms'
   brush.style.zIndex = `${maxZIndex - 1}`
-  brush.style.transition = '200ms width, 200ms height'
+  brush.style.transition = '200ms width, 200ms height, 200ms opacity'
 
   return {
     append: (parent) => {
