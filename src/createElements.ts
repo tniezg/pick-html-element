@@ -145,7 +145,7 @@ export const createPageElementHighlight = (options): CreatePageElementHighlightR
 
 export const createTooltips = (options): CreateTooltipsReturn => {
   const tooltip = document.createElement('div')
-  const { alternativeControls } = options
+  const { alternativeControls, pointerSelect } = options
 
   tooltip.style.position = 'fixed'
   tooltip.style.top = '0'
@@ -157,7 +157,12 @@ export const createTooltips = (options): CreateTooltipsReturn => {
   tooltip.style.opacity = '1'
 
   const shadowColor = 'rgba(255,255,255,0.2)'
-  tooltip.style.textShadow = `-1px -1px 0 ${shadowColor}, 1px -1px 0 ${shadowColor}, -1px 1px 0 ${shadowColor}, 1px 1px 0 ${shadowColor}`
+  tooltip.style.textShadow = [
+    `-1px -1px 0 ${shadowColor}`,
+    `1px -1px 0 ${shadowColor}`,
+    `-1px 1px 0 ${shadowColor}`,
+    `1px 1px 0 ${shadowColor}`
+  ].join(',')
   tooltip.style.fontWeight = '800'
 
   if (alternativeControls) {
@@ -165,14 +170,14 @@ export const createTooltips = (options): CreateTooltipsReturn => {
       'To select a bigger element, press Shift + p or +.',
       'To select a smaller element, press Shift + o or -.',
       'To cancel, press Shift + x or Escape.',
-      'To confirm, press Shift + s or Enter.'
+      pointerSelect ? 'To confirm, press Shift + s, Enter or click.' : 'To confirm, press Shift + s or Enter.'
     ].join('\n')
   } else {
     tooltip.textContent = [
       'To select a bigger element, press Shift + p.',
       'To select a smaller element, press Shift + o.',
       'To cancel, press Shift + x.',
-      'To confirm, press Shift + s.'
+      pointerSelect ? 'To confirm, press Shift + s or click.' : 'To confirm, press Shift + s.'
     ].join('\n')
   }
   tooltip.style.zIndex = `${maxZIndex}`

@@ -176,13 +176,16 @@ const updateBrushPosition = (brush: CreateBrushReturn, x: number, y: number): vo
 }
 
 const createState = (options): State => {
-  const { tint } = options
+  const { tint, alternativeControls, pointerSelect } = options
 
   return {
     brush: createBrush({ color: tint }),
     glass: createGlass(),
     pageElementHighlight: createPageElementHighlight({ color: tint }),
-    tooltips: createTooltips({ alternativeControls: options.alternativeControls }),
+    tooltips: createTooltips({
+      alternativeControls,
+      pointerSelect
+    }),
     baseBrushRadius: 50,
     brushRadiusMultiplier: 1,
     lastMouseEvent: null,
@@ -220,10 +223,17 @@ const createOnScrollOnceListener = (state: State, listeners) => (): void => {
   state.pageElementHighlight.hide()
 }
 
-const createOnBlurListener = (state: State, listeners) => (): void => {
+const createOnBlurListener = (state: State, listeners, options) => (): void => {
+  const { pointerSelect } = options
+
   document.removeEventListener('mousemove', listeners.onMouseMoveOnce)
   document.removeEventListener('mousemove', listeners.onMouseMove)
-  document.removeEventListener('keydown', listeners.onKeyDown)
+  document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick)
+
+  if (pointerSelect) {
+    document.removeEventListener('click', listeners.onKeyDownOrMouseClick)
+  }
+
   document.removeEventListener('scroll', listeners.onScrollOnce)
 
   state.elementSelector = null
@@ -232,10 +242,16 @@ const createOnBlurListener = (state: State, listeners) => (): void => {
   state.glass.showFocusRequest()
 }
 
-const createOnFocusListener = (state: State, listeners) => (): void => {
+const createOnFocusListener = (state: State, listeners, options) => (): void => {
+  const { pointerSelect } = options
+
   document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
   document.addEventListener('mousemove', listeners.onMouseMove)
-  document.addEventListener('keydown', listeners.onKeyDown)
+  document.addEventListener('keydown', listeners.onKeyDownOrMouseClick)
+
+  if (pointerSelect) {
+    document.addEventListener('click', listeners.onKeyDownOrMouseClick)
+  }
 
   state.glass.hideFocusRequest()
 }
@@ -246,58 +262,75 @@ const hijackEvent = (event) => {
   event.stopPropagation()
 }
 
-const createOnKeyDownListener = (state: State, updateStateElementSelector, options) => (event: KeyboardEvent): void => {
-  const { hijackEvents, alternativeControls } = options
+const fireCustomSelectEvent = (elementSelector: string | null) => {
+  if (elementSelector === null) {
+    console.warn('No element selected.')
+  } else {
+    console.info('Element picked.')
 
-  if (event.key === 'O' || (alternativeControls && event.key === '-') || (alternativeControls && event.key === '_')) {
-    // Use _ as alias for -.
-    const response = handleBrushDecrease({
-      ...pick(state, ['baseBrushRadius', 'brush', 'lastMouseEvent', 'pageElementHighlight', 'brushRadiusMultiplier']),
-      elementSelectorChangeCallback: updateStateElementSelector
+    const selectEvent = new CustomEvent(elementSelectEventName, {
+      detail: { elementSelector }
     })
 
-    Object.assign(state, response)
+    window.dispatchEvent(selectEvent)
+  }
+}
 
-    if (hijackEvents) {
-      hijackEvent(event)
-    }
-  } else if (
-    event.key === 'P' ||
-    (alternativeControls && event.key === '+') ||
-    (alternativeControls && event.key === '=')
-  ) {
-    // Use = as alias for +.
-    const response = handleBrushRadiusIncrease({
-      ...pick(state, ['baseBrushRadius', 'brush', 'lastMouseEvent', 'pageElementHighlight', 'brushRadiusMultiplier']),
-      elementSelectorChangeCallback: updateStateElementSelector
-    })
+const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSelector, options) => (
+  event: KeyboardEvent | MouseEvent
+): void => {
+  const { hijackEvents, alternativeControls, pointerSelect, hijackPointerEvents } = options
 
-    Object.assign(state, response)
-
-    if (hijackEvents) {
-      hijackEvent(event)
-    }
-  } else if (event.key === 'X' || (alternativeControls && event.key === 'Escape')) {
-    window[scriptKey].destroy()
-
-    if (hijackEvents) {
-      hijackEvent(event)
-    }
-  } else if (event.key === 'S' || (alternativeControls && event.key === 'Enter')) {
-    if (state.elementSelector === null) {
-      console.warn('No element selected.')
-    } else {
-      console.info('Element picked.')
-
-      const selectEvent = new CustomEvent(elementSelectEventName, {
-        detail: { elementSelector: state.elementSelector }
+  if (event instanceof KeyboardEvent) {
+    if (event.key === 'O' || (alternativeControls && event.key === '-') || (alternativeControls && event.key === '_')) {
+      // Use _ as alias for -.
+      const response = handleBrushDecrease({
+        ...pick(state, ['baseBrushRadius', 'brush', 'lastMouseEvent', 'pageElementHighlight', 'brushRadiusMultiplier']),
+        elementSelectorChangeCallback: updateStateElementSelector
       })
 
-      window.dispatchEvent(selectEvent)
-    }
+      Object.assign(state, response)
 
-    if (hijackEvents) {
-      hijackEvent(event)
+      if (hijackEvents) {
+        hijackEvent(event)
+      }
+    } else if (
+      event.key === 'P' ||
+      (alternativeControls && event.key === '+') ||
+      (alternativeControls && event.key === '=')
+    ) {
+      // Use = as alias for +.
+      const response = handleBrushRadiusIncrease({
+        ...pick(state, ['baseBrushRadius', 'brush', 'lastMouseEvent', 'pageElementHighlight', 'brushRadiusMultiplier']),
+        elementSelectorChangeCallback: updateStateElementSelector
+      })
+
+      Object.assign(state, response)
+
+      if (hijackEvents) {
+        hijackEvent(event)
+      }
+    } else if (event.key === 'X' || (alternativeControls && event.key === 'Escape')) {
+      window[scriptKey].destroy()
+
+      if (hijackEvents) {
+        hijackEvent(event)
+      }
+    } else if (event.key === 'S' || (alternativeControls && event.key === 'Enter')) {
+      fireCustomSelectEvent(state.elementSelector)
+
+      if (hijackEvents) {
+        hijackEvent(event)
+      }
+    }
+  } else if (event instanceof MouseEvent) {
+    if (pointerSelect) {
+      // Assume MouseEvent is a click and not press, mouse up etc.
+      fireCustomSelectEvent(state.elementSelector)
+
+      if (hijackPointerEvents) {
+        hijackEvent(event)
+      }
     }
   }
 }
@@ -306,7 +339,9 @@ const init = (customOptions: InitOptions) => {
   const defaultOptions: InitOptions = {
     hijackEvents: true,
     alternativeControls: true,
-    tint: '#ff3300'
+    tint: '#ff3300',
+    pointerSelect: true,
+    hijackPointerEvents: true
   }
   const options: InitOptions = {
     ...customOptions,
@@ -314,7 +349,8 @@ const init = (customOptions: InitOptions) => {
   }
   const state = createState({
     alternativeControls: options.alternativeControls,
-    tint: options.tint
+    tint: options.tint,
+    pointerSelect: options.pointerSelect
   })
 
   const updateStateElementSelector = (elementSelector: string): void => {
@@ -328,11 +364,13 @@ const init = (customOptions: InitOptions) => {
     onMouseMove: createOnMouseMoveListener(state, updateStateElementSelector),
     onMouseMoveOnce: createOnMouseMoveOnceListener(state, listeners),
     onScrollOnce: createOnScrollOnceListener(state, listeners),
-    onBlur: createOnBlurListener(state, listeners),
-    onFocus: createOnFocusListener(state, listeners),
-    onKeyDown: createOnKeyDownListener(state, updateStateElementSelector, {
+    onBlur: createOnBlurListener(state, listeners, { pointerSelect: options.pointerSelect }),
+    onFocus: createOnFocusListener(state, listeners, { pointerSelect: options.pointerSelect }),
+    onKeyDownOrMouseClick: createOnKeyDownOrMouseClickListener(state, updateStateElementSelector, {
       hijackEvents: options.hijackEvents,
-      alternativeControls: options.alternativeControls
+      alternativeControls: options.alternativeControls,
+      pointerSelect: options.pointerSelect,
+      hijackPointerEvents: options.hijackPointerEvents
     })
   })
 
@@ -343,7 +381,11 @@ const init = (customOptions: InitOptions) => {
   if (document.hasFocus()) {
     document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
     document.addEventListener('mousemove', listeners.onMouseMove)
-    document.addEventListener('keydown', listeners.onKeyDown)
+    document.addEventListener('keydown', listeners.onKeyDownOrMouseClick)
+
+    if (options.pointerSelect) {
+      document.addEventListener('click', listeners.onKeyDownOrMouseClick)
+    }
   } else {
     state.glass.showFocusRequest()
   }
@@ -355,7 +397,12 @@ const init = (customOptions: InitOptions) => {
     destroy: (): void => {
       document.removeEventListener('mousemove', listeners.onMouseMoveOnce)
       document.removeEventListener('mousemove', listeners.onMouseMove)
-      document.removeEventListener('keydown', listeners.onKeyDown)
+      document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick)
+
+      if (options.pointerSelect) {
+        document.removeEventListener('click', listeners.onKeyDownOrMouseClick)
+      }
+
       document.removeEventListener('scroll', listeners.onScrollOnce)
       window.removeEventListener('blur', listeners.onBlur)
       window.removeEventListener('focus', listeners.onFocus)

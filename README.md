@@ -1,7 +1,5 @@
 # Pick HTML Element
 
-<!-- TODO: pick color different than red, pick if elements underneath can be clicked -->
-
 <!-- FIXME: show a gif of how the script work on a website -->
 
 Creates a JavaScript file generating an interface for picking an HTML element on any website. The file needs to be injected into a website. It's a self-contained solution. It uses a mouse and keyboard for choosing an element on the page. The tool sends out an event when an element is picked so that another script can pick up the collected information and react to it.
