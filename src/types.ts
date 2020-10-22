@@ -25,7 +25,11 @@ export interface CreatePageElementHighlightReturn extends CreateElementReturn {
   removePosition: () => void
 }
 
-export interface CreateTooltipsReturn extends CreateElementReturn {}
+export interface CreateTooltipsReturn extends CreateElementReturn {
+  show: () => void
+  hide: () => void
+  hits: (viewportX: number, viewportY: number) => boolean
+}
 
 export interface ElementSelectorChangeCallback {
   (elementSelector: string): unknown

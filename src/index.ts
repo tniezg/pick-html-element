@@ -194,6 +194,12 @@ const createOnMouseMoveListener = (state: State, updateStateElementSelector) => 
   state.lastMouseEvent = event
   updateBrushPosition(state.brush, event.pageX, event.pageY)
   debouncedUpdatePickElement(event, state.brush.getRadius(), state.pageElementHighlight, updateStateElementSelector)
+
+  if (state.tooltips.hits(event.clientX, event.clientY)) {
+    state.tooltips.hide()
+  } else {
+    state.tooltips.show()
+  }
 }
 
 const createOnMouseMoveOnceListener = (state: State, listeners) => (): void => {
