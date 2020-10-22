@@ -1,5 +1,7 @@
 # Pick HTML Element
 
+![GitHub license](https://img.shields.io/github/license/playfulcorgi/pick-html-element) ![GitHub last commit](https://img.shields.io/github/last-commit/playfulcorgi/pick-html-element/main)
+
 <!-- FIXME: show a gif of how the script work on a website -->
 
 Generates an interface for picking HTML elements on any website using mouse and keyboard inputs. The interface sends out an event when an element is picked so that another script can pick up the collected information and act upon it.
