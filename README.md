@@ -2,13 +2,41 @@
 
 <!-- FIXME: show a gif of how the script work on a website -->
 
-Creates a JavaScript file generating an interface for picking an HTML element on any website. The file needs to be injected into a website. It's a self-contained solution. It uses a mouse and keyboard for choosing an element on the page. The tool sends out an event when an element is picked so that another script can pick up the collected information and react to it.
-
-This is a building block for applications and not to be used separately. Selecting an element results in a CustomEvent called `pickHtmlElementScriptElementSelect` being sent. It contains a CSS selector which can be used to find the selected element on the page.
+Generates an interface for picking HTML elements on any website using mouse and keyboard inputs. The interface sends out an event when an element is picked so that another script can pick up the collected information and act upon it.
 
 To test the script on an example website, open `example/index.html` in Google Chrome.
 
 ![Pick HTML element in action](./README-media/pick-html-element-example.gif)
+
+## How to use
+
+### Add `dist/index.js` to the website
+
+```html
+<script src="{{path to script}}"></script>
+```
+
+### Show the selection interface to the user
+
+```html
+<script>
+  window.pickHtmlElementScript.init()
+</script>
+```
+
+### Listen for the select event
+
+```html
+<script>
+  const listener = (event) => {
+    console.log('User selected an HTML element. Details: ', event.detail)
+    // Remove the interface for selecting an element or keep listening for more elements.
+    window.pickHtmlElementScript.destroy()
+  }
+
+  window.addEventListener('pickHtmlElementScriptElementSelect', listener)
+</script>
+```
 
 ## Development
 
