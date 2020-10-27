@@ -97,7 +97,7 @@ const updatePickElement = (
 
   highlightElement(elementFromSelector, scrollLeft, scrollTop, pageElementHighlight)
 
-  elementSelectorChangeCallback(elementSelector)
+  elementSelectorChangeCallback(elementSelector, element)
 }
 
 const debouncedUpdatePickElement = debounce(updatePickElement, 200)
@@ -189,7 +189,8 @@ const createState = (options): State => {
     baseBrushRadius: 50,
     brushRadiusMultiplier: 1,
     lastMouseEvent: null,
-    elementSelector: null
+    elementSelector: null,
+    element: null
   }
 }
 
@@ -262,14 +263,17 @@ const hijackEvent = (event) => {
   event.stopPropagation()
 }
 
-const fireCustomSelectEvent = (elementSelector: string | null) => {
+const fireCustomSelectEvent = (elementSelector: string | null, element: Element | null) => {
   if (elementSelector === null) {
     console.warn('No element selected.')
   } else {
-    console.info('Element picked.')
+    console.info('Element picked: ', elementSelector, element)
 
     const selectEvent = new CustomEvent(elementSelectEventName, {
-      detail: { elementSelector }
+      detail: {
+        elementSelector,
+        element
+      }
     })
 
     window.dispatchEvent(selectEvent)
@@ -317,7 +321,7 @@ const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSel
         hijackEvent(event)
       }
     } else if (event.key === 'S' || (alternativeControls && event.key === 'Enter')) {
-      fireCustomSelectEvent(state.elementSelector)
+      fireCustomSelectEvent(state.elementSelector, state.element)
 
       if (hijackEvents) {
         hijackEvent(event)
@@ -326,7 +330,7 @@ const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSel
   } else if (event instanceof MouseEvent) {
     if (pointerSelect) {
       // Assume MouseEvent is a click and not press, mouse up etc.
-      fireCustomSelectEvent(state.elementSelector)
+      fireCustomSelectEvent(state.elementSelector, state.element)
 
       if (hijackPointerEvents) {
         hijackEvent(event)
@@ -353,8 +357,9 @@ const init = (customOptions: InitOptions) => {
     pointerSelect: options.pointerSelect
   })
 
-  const updateStateElementSelector = (elementSelector: string): void => {
+  const updateStateElementSelector = (elementSelector: string, element: Element): void => {
     state.elementSelector = elementSelector
+    state.element = element
   }
 
   const listeners: any = {}
