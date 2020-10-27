@@ -32,7 +32,7 @@ export interface CreateTooltipsReturn extends CreateElementReturn {
 }
 
 export interface ElementSelectorChangeCallback {
-  (elementSelector: string): unknown
+  (elementSelector: string, element: Element): unknown
 }
 
 export interface HandleBrushDecrease {
@@ -70,6 +70,7 @@ export interface State {
   brushRadiusMultiplier: number
   lastMouseEvent: MouseEvent | null
   elementSelector: string | null
+  element: Element | null
 }
 
 export interface InitOptions {
