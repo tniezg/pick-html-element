@@ -429,6 +429,9 @@ window[scriptKey] = (() => {
       const options = window[scriptOptionsKey]
       instance = init(options)
     },
+    isActive: (): boolean => {
+      return instance !== null
+    },
     destroy: (): void => {
       if (instance) {
         instance.destroy()
