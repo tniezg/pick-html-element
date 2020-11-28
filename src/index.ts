@@ -229,10 +229,10 @@ const createOnBlurListener = (state: State, listeners, options) => (): void => {
 
   document.removeEventListener('mousemove', listeners.onMouseMoveOnce)
   document.removeEventListener('mousemove', listeners.onMouseMove)
-  document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick)
+  document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
 
   if (pointerSelect) {
-    document.removeEventListener('click', listeners.onKeyDownOrMouseClick)
+    document.removeEventListener('click', listeners.onKeyDownOrMouseClick, true)
   }
 
   document.removeEventListener('scroll', listeners.onScrollOnce)
@@ -248,16 +248,20 @@ const createOnFocusListener = (state: State, listeners, options) => (): void => 
 
   document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
   document.addEventListener('mousemove', listeners.onMouseMove)
-  document.addEventListener('keydown', listeners.onKeyDownOrMouseClick)
+  document.addEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
 
   if (pointerSelect) {
-    document.addEventListener('click', listeners.onKeyDownOrMouseClick)
+    document.addEventListener('click', listeners.onKeyDownOrMouseClick, true)
   }
 
   state.glass.hideFocusRequest()
 }
 
-const hijackEvent = (event) => {
+/**
+ * Attempts to stop event from propagating further.
+ * It's required the event listener calling this function is marked as NOT passive.
+ */
+const attemptHijackEvent = (event) => {
   event.preventDefault()
   event.stopImmediatePropagation()
   event.stopPropagation()
@@ -296,7 +300,7 @@ const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSel
       Object.assign(state, response)
 
       if (hijackEvents) {
-        hijackEvent(event)
+        attemptHijackEvent(event)
       }
     } else if (
       event.key === 'P' ||
@@ -312,19 +316,19 @@ const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSel
       Object.assign(state, response)
 
       if (hijackEvents) {
-        hijackEvent(event)
+        attemptHijackEvent(event)
       }
     } else if (event.key === 'X' || (alternativeControls && event.key === 'Escape')) {
       window[scriptKey].destroy()
 
       if (hijackEvents) {
-        hijackEvent(event)
+        attemptHijackEvent(event)
       }
     } else if (event.key === 'S' || (alternativeControls && event.key === 'Enter')) {
       fireCustomSelectEvent(state.elementSelector, state.element)
 
       if (hijackEvents) {
-        hijackEvent(event)
+        attemptHijackEvent(event)
       }
     }
   } else if (event instanceof MouseEvent) {
@@ -333,7 +337,7 @@ const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSel
       fireCustomSelectEvent(state.elementSelector, state.element)
 
       if (hijackPointerEvents) {
-        hijackEvent(event)
+        attemptHijackEvent(event)
       }
     }
   }
@@ -386,10 +390,10 @@ const init = (customOptions: InitOptions) => {
   if (document.hasFocus()) {
     document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
     document.addEventListener('mousemove', listeners.onMouseMove)
-    document.addEventListener('keydown', listeners.onKeyDownOrMouseClick)
+    document.addEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
 
     if (options.pointerSelect) {
-      document.addEventListener('click', listeners.onKeyDownOrMouseClick)
+      document.addEventListener('click', listeners.onKeyDownOrMouseClick, true)
     }
   } else {
     state.glass.showFocusRequest()
@@ -402,10 +406,10 @@ const init = (customOptions: InitOptions) => {
     destroy: (): void => {
       document.removeEventListener('mousemove', listeners.onMouseMoveOnce)
       document.removeEventListener('mousemove', listeners.onMouseMove)
-      document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick)
+      document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
 
       if (options.pointerSelect) {
-        document.removeEventListener('click', listeners.onKeyDownOrMouseClick)
+        document.removeEventListener('click', listeners.onKeyDownOrMouseClick, true)
       }
 
       document.removeEventListener('scroll', listeners.onScrollOnce)
