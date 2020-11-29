@@ -12,11 +12,26 @@ To test the script on an example website, open `example/index.html` in Google Ch
 
 ## How to use
 
-### Add `dist/index.js` to the website
+### Include `dist/index.js` in the website
 
 ```html
 <script src="{{path to script}}"></script>
 ```
+
+Alternatively, copy `dist/index.js` using `copy-webpack-plugin` in Webpack:
+
+```javascript
+new CopyPlugin({
+  patterns: [
+    {
+      from: 'node_modules/pick-html-element/dist/index.js',
+      to: 'pick-html-element.js'
+    }
+  ]
+})
+```
+
+The latter solution may be useful for bundling Chrome extensions or proxying the script through a server.
 
 ### Show the selection interface to the user
 
