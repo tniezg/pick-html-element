@@ -11,10 +11,12 @@ export interface CreateBrushReturn extends CreateElementReturn {
   hide: () => void
 }
 
-export interface CreateGlassReturn extends CreateElementReturn {
+export interface CreateRefocusRequestMessageReturn extends CreateElementReturn {
   showFocusRequest: () => void
   hideFocusRequest: () => void
 }
+
+export interface CreateGlassReturn extends CreateElementReturn {}
 
 export interface CreatePageElementHighlightReturn extends CreateElementReturn {
   setDimensions: (width: number, height: number) => void
@@ -74,11 +76,8 @@ export interface State {
 }
 
 export interface InitOptions {
-  hijackEvents: boolean // Attempt to stop keyboard shortcuts from triggering regular page interactions.
   alternativeControls: boolean // Add another set of keyboard shortcuts.
   tint: string // UI color.
-  pointerSelect: boolean // Allows selecting an element using a mouse.
-  hijackPointerEvents: boolean // Attempt to prevent mouse events from triggering regular page interactions.
 }
 
 // Export random thing to ensure Webpack rebuilds when this file changes (it contains only interfaces).

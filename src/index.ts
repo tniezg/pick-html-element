@@ -2,7 +2,10 @@ import getCssSelector from 'css-selector-generator'
 import { debounce } from 'debounce'
 import pick from 'lodash/pick'
 import values from 'lodash/values'
-import { createBrush, createGlass, createPageElementHighlight, createTooltips } from './createElements'
+import { createBrush } from './elements/createBrush'
+import { createGlass } from './elements/createGlass'
+import { createPageElementHighlight } from './elements/createPageElementHighlight'
+import { createTooltips } from './elements/createTooltips'
 import {
   dummy,
   CreateBrushReturn,
@@ -15,10 +18,6 @@ import {
   InitOptions,
   State
 } from './types'
-
-// Import non-TypeScript value from './types' to ensure the files gets reloaded.
-// More info: https://github.com/TypeStrong/fork-ts-checker-webpack-plugin/issues/36.
-dummy
 
 const scriptKey = 'pickHtmlElementScript'
 const scriptOptionsKey = 'pickHtmlElementScriptOptions'
@@ -176,16 +175,13 @@ const updateBrushPosition = (brush: CreateBrushReturn, x: number, y: number): vo
 }
 
 const createState = (options): State => {
-  const { tint, alternativeControls, pointerSelect } = options
+  const { tint, alternativeControls } = options
 
   return {
     brush: createBrush({ color: tint }),
     glass: createGlass(),
     pageElementHighlight: createPageElementHighlight({ color: tint }),
-    tooltips: createTooltips({
-      alternativeControls,
-      pointerSelect
-    }),
+    tooltips: createTooltips({ alternativeControls }),
     baseBrushRadius: 50,
     brushRadiusMultiplier: 1,
     lastMouseEvent: null,
@@ -345,11 +341,8 @@ const createOnKeyDownOrMouseClickListener = (state: State, updateStateElementSel
 
 const init = (customOptions: InitOptions) => {
   const defaultOptions: InitOptions = {
-    hijackEvents: true,
     alternativeControls: true,
-    tint: '#ff3300',
-    pointerSelect: true,
-    hijackPointerEvents: true
+    tint: '#ff3300'
   }
   const options: InitOptions = {
     ...customOptions,
@@ -357,64 +350,61 @@ const init = (customOptions: InitOptions) => {
   }
   const state = createState({
     alternativeControls: options.alternativeControls,
-    tint: options.tint,
-    pointerSelect: options.pointerSelect
+    tint: options.tint
   })
 
-  const updateStateElementSelector = (elementSelector: string, element: Element): void => {
-    state.elementSelector = elementSelector
-    state.element = element
-  }
+  // const updateStateElementSelector = (elementSelector: string, element: Element): void => {
+  //   state.elementSelector = elementSelector
+  //   state.element = element
+  // }
 
-  const listeners: any = {}
+  // const listeners: any = {}
 
   // Extend the listeners object to allow listeners to call each other.
-  Object.assign(listeners, {
-    onMouseMove: createOnMouseMoveListener(state, updateStateElementSelector),
-    onMouseMoveOnce: createOnMouseMoveOnceListener(state, listeners),
-    onScrollOnce: createOnScrollOnceListener(state, listeners),
-    onBlur: createOnBlurListener(state, listeners, { pointerSelect: options.pointerSelect }),
-    onFocus: createOnFocusListener(state, listeners, { pointerSelect: options.pointerSelect }),
-    onKeyDownOrMouseClick: createOnKeyDownOrMouseClickListener(state, updateStateElementSelector, {
-      hijackEvents: options.hijackEvents,
-      alternativeControls: options.alternativeControls,
-      pointerSelect: options.pointerSelect,
-      hijackPointerEvents: options.hijackPointerEvents
-    })
-  })
+  // Object.assign(listeners, {
+  //   onMouseMove: createOnMouseMoveListener(state, updateStateElementSelector),
+  //   onMouseMoveOnce: createOnMouseMoveOnceListener(state, listeners),
+  //   onScrollOnce: createOnScrollOnceListener(state, listeners),
+  //   onBlur: createOnBlurListener(state, listeners, { pointerSelect: options.pointerSelect }),
+  //   onFocus: createOnFocusListener(state, listeners, { pointerSelect: options.pointerSelect }),
+  //   onKeyDownOrMouseClick: createOnKeyDownOrMouseClickListener(state, updateStateElementSelector, {
+  //     hijackEvents: options.hijackEvents,
+  //     alternativeControls: options.alternativeControls,
+  //     pointerSelect: options.pointerSelect,
+  //     hijackPointerEvents: options.hijackPointerEvents
+  //   })
+  // })
 
   appendAllTo(values(pick(state, ['glass', 'brush', 'pageElementHighlight', 'tooltips'])), document.body)
 
   state.brush.setRadius(state.baseBrushRadius)
 
-  if (document.hasFocus()) {
-    document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
-    document.addEventListener('mousemove', listeners.onMouseMove)
-    document.addEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
+  // if (document.hasFocus()) {
+  //   document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
+  //   document.addEventListener('mousemove', listeners.onMouseMove)
+  //   document.addEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
 
-    if (options.pointerSelect) {
-      document.addEventListener('click', listeners.onKeyDownOrMouseClick, true)
-    }
-  } else {
-    state.glass.showFocusRequest()
-  }
+  //   if (options.pointerSelect) {
+  //     document.addEventListener('click', listeners.onKeyDownOrMouseClick, true)
+  //   }
+  // } else {
+  //   state.glass.showFocusRequest()
+  // }
 
-  window.addEventListener('blur', listeners.onBlur)
-  window.addEventListener('focus', listeners.onFocus)
+  // window.addEventListener('blur', listeners.onBlur)
+  // window.addEventListener('focus', listeners.onFocus)
 
   return {
     destroy: (): void => {
-      document.removeEventListener('mousemove', listeners.onMouseMoveOnce)
-      document.removeEventListener('mousemove', listeners.onMouseMove)
-      document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
+      // document.removeEventListener('mousemove', listeners.onMouseMoveOnce)
+      // document.removeEventListener('mousemove', listeners.onMouseMove)
+      // document.removeEventListener('keydown', listeners.onKeyDownOrMouseClick, true)
 
-      if (options.pointerSelect) {
-        document.removeEventListener('click', listeners.onKeyDownOrMouseClick, true)
-      }
+      // document.removeEventListener('click', listeners.onKeyDownOrMouseClick, true)
 
-      document.removeEventListener('scroll', listeners.onScrollOnce)
-      window.removeEventListener('blur', listeners.onBlur)
-      window.removeEventListener('focus', listeners.onFocus)
+      // document.removeEventListener('scroll', listeners.onScrollOnce)
+      // window.removeEventListener('blur', listeners.onBlur)
+      // window.removeEventListener('focus', listeners.onFocus)
 
       removeAll(values(pick(state, ['glass', 'brush', 'pageElementHighlight', 'tooltips'])))
     }
