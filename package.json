@@ -4,7 +4,7 @@
   "description": "Creates an interface for picking HTML elements on any website.",
   "main": "dist/index.js:",
   "engines": {
-    "node": ">=14.10.0"
+    "node": ">=14.16.0"
   },
   "scripts": {
     "test": "jest --coverage --verbose",
