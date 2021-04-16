@@ -1,3 +1,4 @@
+import { h, render, Component } from 'preact'
 // import getCssSelector from 'css-selector-generator'
 // import { debounce } from 'debounce'
 // import pick from 'lodash/pick'
@@ -410,36 +411,44 @@
 //   }
 // }
 
+class App extends Component {
+  render() {
+    console.log('ajsdfjag')
+    return <h1>Hello, world!</h1>
+  }
+}
+
 const create = (customOptions: any) => {
   // TODO: Replace any
   const defaultOptions = CONFIG.defaultCreateOptions
+  // TODO: Use options
   const options = {
     ...defaultOptions,
     ...customOptions
   }
 
-  let instance = null
+  let rootElement = null
 
   return {
     init: (): void => {
-      if (instance) {
-        instance.destroy()
+      if (rootElement !== null) {
+        rootElement.remove()
+        render(null, rootElement)
       }
 
-      // TODO: Create Preact app here
+      rootElement = document.createElement('div')
+      document.body.appendChild(rootElement)
 
-      // FIXME: instance = init(options)
-    },
-    isActive: (): boolean => {
-      return instance !== null
+      render(<App />, rootElement)
     },
     destroy: (): void => {
-      if (instance) {
-        // TODO: Remove Preact app here
-        // instance.destroy()
-        instance = null
+      if (rootElement !== null) {
+        render(null, rootElement)
+        rootElement.remove()
+        rootElement = null
       }
-    }
+    },
+    isActive: (): boolean => rootElement !== null
   }
 }
 

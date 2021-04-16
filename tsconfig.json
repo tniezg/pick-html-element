@@ -10,6 +10,9 @@
     "declaration": true,
     "declarationDir": "./types",
     "resolveJsonModule": true,
-    "importsNotUsedAsValues": "preserve"
+    "importsNotUsedAsValues": "preserve",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
   }
 }

@@ -24,7 +24,7 @@ export default {
     new DefinePlugin({ CONFIG: JSON.stringify(config.util.toObject()) })
   ],
   devtool: 'source-map',
-  entry: resolve(srcDirectory, 'index.ts'),
+  entry: resolve(srcDirectory, 'index.tsx'),
   // TODO: Change target when building node version.
   // TODO: Create two separate Webpack configs: for node and for browser.
   target: ['web', 'es6'],
