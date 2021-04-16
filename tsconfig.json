@@ -6,9 +6,10 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "module": "commonjs",
-    "resolveJsonModule": true,
     "esModuleInterop": true,
     "declaration": true,
-    "declarationDir": "./types"
+    "declarationDir": "./types",
+    "resolveJsonModule": true,
+    "importsNotUsedAsValues": "preserve"
   }
 }

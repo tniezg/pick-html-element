@@ -1,0 +1,2 @@
+var PickHtmlElement;(()=>{"use strict";var e,t={};e=t,Object.defineProperty(e,"__esModule",{value:!0}),e.create=void 0,e.create=e=>{const t={browserGlobal:"PickHtmlElement",elementSelectEventName:"pickHtmlElementScriptElementSelect"}.defaultCreateOptions;Object.assign(Object.assign({},t),e);let l=null;return{init:()=>{l&&l.destroy()},isActive:()=>null!==l,destroy:()=>{l&&(l=null)}}},PickHtmlElement=t})();
+//# sourceMappingURL=index.js.map

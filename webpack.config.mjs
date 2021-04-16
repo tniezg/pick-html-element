@@ -1,30 +1,40 @@
 import { fileURLToPath } from 'url'
 import { resolve, dirname } from 'path'
 import webpack from 'webpack'
+import config from 'config'
 import ProgressBar from './webpack-plugins/ProgressBar.mjs'
 import DeleteBeforeEmit from './webpack-plugins/DeleteBeforeEmit.mjs'
-import { isDevelopment } from './src/utilities/buildEnvironment.mjs'
 
 // Redefining __dirname is a temporary solution, due to https://github.com/nodejs/help/issues/2907
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const { WatchIgnorePlugin } = webpack
+const { WatchIgnorePlugin, DefinePlugin } = webpack
 const baseDirectory = __dirname
 const srcDirectory = resolve(baseDirectory, 'src')
 const distDirectory = resolve(baseDirectory, 'dist')
+const webDistDirectory = resolve(distDirectory, 'web')
+
+console.log('sjdfjakshdf', config.get('browserGlobal'))
 
 export default {
   context: baseDirectory,
   plugins: [
     new ProgressBar(),
     new DeleteBeforeEmit(resolve(baseDirectory, 'types')),
-    new WatchIgnorePlugin({ paths: [resolve(baseDirectory, 'types')] })
+    new WatchIgnorePlugin({ paths: [resolve(baseDirectory, 'types')] }),
+    new DefinePlugin({ CONFIG: JSON.stringify(config.util.toObject()) })
   ],
-  devtool: isDevelopment() ? 'inline-source-map' : 'cheap-source-map',
+  devtool: 'source-map',
   entry: resolve(srcDirectory, 'index.ts'),
+  // TODO: Change target when building node version.
+  // TODO: Create two separate Webpack configs: for node and for browser.
   target: ['web', 'es6'],
-  mode: isDevelopment() ? 'development' : 'production',
+  mode: 'production',
   output: {
-    path: distDirectory,
+    library: {
+      name: config.get('browserGlobal'),
+      type: 'var'
+    },
+    path: webDistDirectory,
     filename: 'index.js'
   },
   module: {

@@ -1,0 +1,7 @@
+{
+  "browserGlobal": "PickHtmlElement",
+  "elementSelectEventName": "pickHtmlElementScriptElementSelect",
+  "defaultCreateOptions": {
+    "tint": "#ff3300"
+  }
+}
