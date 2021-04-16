@@ -7,7 +7,6 @@ import { createGlass } from './elements/createGlass'
 import { createPageElementHighlight } from './elements/createPageElementHighlight'
 import { createTooltips } from './elements/createTooltips'
 import {
-  dummy,
   CreateBrushReturn,
   CreatePageElementHighlightReturn,
   ElementSelectorChangeCallback,
