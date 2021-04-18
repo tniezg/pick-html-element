@@ -74,11 +74,3 @@ export interface State {
   elementSelector: string | null
   element: Element | null
 }
-
-// export interface InitOptions {
-//   alternativeControls: boolean // Add another set of keyboard shortcuts.
-//   tint: string // UI color.
-// }
-
-// Export random thing to ensure Webpack rebuilds when this file changes (it contains only interfaces).
-export const dummy = {}

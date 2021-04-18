@@ -1,4 +1,5 @@
-import { h, render, Component } from 'preact'
+import { h, render } from 'preact'
+import App from './components/App'
 // import getCssSelector from 'css-selector-generator'
 // import { debounce } from 'debounce'
 // import pick from 'lodash/pick'
@@ -342,15 +343,10 @@ import { h, render, Component } from 'preact'
 // const init = (customOptions: InitOptions) => {
 //   const defaultOptions: InitOptions = {
 //     alternativeControls: true,
-//     tint: '#ff3300'
 //   }
-//   const options: InitOptions = {
-//     ...customOptions,
-//     ...defaultOptions
-//   }
+
 //   const state = createState({
 //     alternativeControls: options.alternativeControls,
-//     tint: options.tint
 //   })
 
 //   // const updateStateElementSelector = (elementSelector: string, element: Element): void => {
@@ -410,13 +406,6 @@ import { h, render, Component } from 'preact'
 //     }
 //   }
 // }
-
-class App extends Component {
-  render() {
-    console.log('ajsdfjag')
-    return <h1>Hello, world!</h1>
-  }
-}
 
 const create = (customOptions: any) => {
   // TODO: Replace any

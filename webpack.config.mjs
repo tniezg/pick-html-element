@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url'
 import { resolve, dirname } from 'path'
 import webpack from 'webpack'
 import config from 'config'
+import StyledComponentsPlugin from 'typescript-plugin-styled-components'
 import ProgressBar from './webpack-plugins/ProgressBar.mjs'
 import DeleteBeforeEmit from './webpack-plugins/DeleteBeforeEmit.mjs'
 
@@ -12,8 +13,6 @@ const baseDirectory = __dirname
 const srcDirectory = resolve(baseDirectory, 'src')
 const distDirectory = resolve(baseDirectory, 'dist')
 const webDistDirectory = resolve(distDirectory, 'web')
-
-console.log('sjdfjakshdf', config.get('browserGlobal'))
 
 export default {
   context: baseDirectory,
@@ -46,12 +45,18 @@ export default {
         include: srcDirectory,
         options: {
           configFile: resolve(baseDirectory, 'tsconfig.json'),
-          onlyCompileBundledFiles: true
+          onlyCompileBundledFiles: true,
+          getCustomTransformers: () => ({ before: [StyledComponentsPlugin.createTransformer()] })
         }
       }
     ]
   },
   resolve: {
+    alias: {
+      'react': 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom': 'preact/compat'
+    },
     symlinks: false,
     extensions: ['.tsx', '.ts', '.js']
   }
