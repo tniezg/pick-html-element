@@ -1,5 +1,6 @@
 import { h, render } from 'preact'
 import App from './components/App'
+
 // import getCssSelector from 'css-selector-generator'
 // import { debounce } from 'debounce'
 // import pick from 'lodash/pick'

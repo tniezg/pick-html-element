@@ -16,8 +16,6 @@ export interface CreateRefocusRequestMessageReturn extends CreateElementReturn {
   hideFocusRequest: () => void
 }
 
-export interface CreateGlassReturn extends CreateElementReturn {}
-
 export interface CreatePageElementHighlightReturn extends CreateElementReturn {
   setDimensions: (width: number, height: number) => void
   setPosition: (x: number, y: number) => void

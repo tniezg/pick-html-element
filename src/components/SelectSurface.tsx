@@ -9,8 +9,9 @@ const StyledSelectSurface = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(100, 100, 100, 0.4);
-  z-index: ${maxZIndex};
+  z-index: ${maxZIndex - 1};
 `
+// TODO: Add small plus pattern to the background
 
 const SelectSurface = () => {
   return <StyledSelectSurface>Click on this surface to select an element on the page</StyledSelectSurface>
