@@ -3,14 +3,6 @@ export interface CreateElementReturn {
   remove: () => void
 }
 
-export interface CreateBrushReturn extends CreateElementReturn {
-  setRadius: (radius: number) => void
-  setPosition: (x: number, y: number) => void
-  getRadius: () => number
-  show: () => void
-  hide: () => void
-}
-
 export interface CreateRefocusRequestMessageReturn extends CreateElementReturn {
   showFocusRequest: () => void
   hideFocusRequest: () => void

@@ -1,3 +1,3 @@
-import { h } from 'preact';
-declare const Menu: () => h.JSX.Element;
+import { FunctionComponent } from 'preact';
+declare const Menu: FunctionComponent;
 export default Menu;

@@ -1,8 +1,4 @@
-import { CreateBrushReturn } from '../types'
-import { hexToRgbA } from '../utilities/hexToRgba'
-import maxZIndex from '../utilities/maxZIndex'
-
-export const createBrush = (options): CreateBrushReturn => {
+export const createBrush = (options) => {
   const brush = document.createElement('div')
   let radius = 0
   const { color } = options
@@ -22,9 +18,6 @@ export const createBrush = (options): CreateBrushReturn => {
     append: (parent) => {
       parent.appendChild(brush)
       brush.offsetHeight // force reflow
-    },
-    remove: (): void => {
-      brush.remove()
     },
     setRadius: (localRadius) => {
       const diameter = localRadius * 2

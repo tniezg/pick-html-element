@@ -1,3 +1,3 @@
-import { h } from 'preact';
-declare const SelectSurface: () => h.JSX.Element;
+import { FunctionComponent } from 'preact';
+declare const SelectSurface: FunctionComponent;
 export default SelectSurface;

@@ -1,4 +1,4 @@
-import { h } from 'preact'
+import { FunctionComponent, h } from 'preact'
 import styled from 'styled-components'
 import { selectSurface } from '../utilities/images'
 import maxZIndex from '../utilities/maxZIndex'
@@ -11,10 +11,11 @@ const StyledSelectSurface = styled.div`
   height: 100%;
   background: url('${selectSurface}');
   background-size: 37px;
-  z-index: ${maxZIndex - 1};
+  z-index: ${maxZIndex - 3};
+  cursor: none;
 `
 
-const SelectSurface = () => {
+const SelectSurface: FunctionComponent = () => {
   return <StyledSelectSurface />
 }
 

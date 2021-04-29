@@ -1,12 +1,12 @@
-import { h } from 'preact'
+import { FunctionComponent, h } from 'preact'
 import tinycolor from 'tinycolor2'
 import PropTypes from 'prop-types'
-import { useState } from 'preact/hooks'
-import styled, { css, ThemeProvider } from 'styled-components'
-import defaultTheme from '../utilities/defaultTheme'
+import { useContext, useState } from 'preact/hooks'
+import styled, { css } from 'styled-components'
 import { expandIcon, menuBorder, shrinkIcon } from '../utilities/images'
 import maxZIndex from '../utilities/maxZIndex'
 import { mix, withFullWidthBlock } from '../utilities/styledComponentsMixins'
+import { Context } from './App'
 
 const expandedMenuWidth = 186
 const shrunkMenuWidth = 80
@@ -16,7 +16,7 @@ const darkenHover = (sourceColor: string): string => tinycolor(sourceColor).dark
 const darkenFocus = (sourceColor: string): string => tinycolor(sourceColor).darken(20).toString()
 const resizeButtonColor = '#e3e3e3'
 
-const StyledMenu = styled.div<{ expanded: boolean }>`
+const StyledMenu = styled.div<any>`
   position: fixed;
   top: 30px;
   left: 30px;
@@ -29,7 +29,7 @@ const StyledMenu = styled.div<{ expanded: boolean }>`
   border-image-width: 16px;
   border-image-repeat: stretch;
   border-image-outset: 16px;
-  z-index: ${maxZIndex};
+  z-index: ${maxZIndex - 1};
   overflow: hidden;
   box-sizing: content-box;
   ${({ expanded }) =>
@@ -171,28 +171,30 @@ const StyledMenuResizeButton = mix(
   `
 )
 
-const Menu = () => {
+const Menu: FunctionComponent = () => {
   const [expanded, setExpanded] = useState(true)
+  const [_state, dispatch] = useContext(Context)
+
+  const onMouseEnter = (_event: MouseEvent) => void dispatch({ type: 'setBrushVisible', payload: false })
+  const onMouseLeave = (_event: MouseEvent) => void dispatch({ type: 'setBrushVisible', payload: true })
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <StyledMenu expanded={expanded}>
-        <StyledContent expanded={expanded}>
-          <StyledHeading role="heading" aria-level={6}>
-            You're selecting elements on the website
-          </StyledHeading>
-          <StyledMenuPrimaryButton type="button">Confirm</StyledMenuPrimaryButton>
-          <StyledMenuSecondaryButton type="button">Deselect</StyledMenuSecondaryButton>
-          <StyledMenuSecondaryButton type="button">Cancel</StyledMenuSecondaryButton>
-        </StyledContent>
-        <StyledMenuResizeButton
-          expanded={expanded}
-          onClick={() => setExpanded(!expanded)}
-          type="button"
-          aria-label="shrink or expand"
-        ></StyledMenuResizeButton>
-      </StyledMenu>
-    </ThemeProvider>
+    <StyledMenu expanded={expanded} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <StyledContent expanded={expanded}>
+        <StyledHeading role="heading" aria-level={6}>
+          You're selecting elements on the website
+        </StyledHeading>
+        <StyledMenuPrimaryButton type="button">Confirm</StyledMenuPrimaryButton>
+        <StyledMenuSecondaryButton type="button">Deselect</StyledMenuSecondaryButton>
+        <StyledMenuSecondaryButton type="button">Cancel</StyledMenuSecondaryButton>
+      </StyledContent>
+      <StyledMenuResizeButton
+        expanded={expanded}
+        onClick={() => setExpanded(!expanded)}
+        type="button"
+        aria-label="shrink or expand"
+      ></StyledMenuResizeButton>
+    </StyledMenu>
   )
 }
 
