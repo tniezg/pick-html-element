@@ -162,10 +162,10 @@ var PickHtmlElement;(()=>{var t={958:t=>{self,t.exports=(()=>{var t={3426:(t,e,r
   border-width: 1px;
   border-style: solid;
   border-image-source: url('${c.selectPreviewBorder}');
-  border-image-slice: 20;
-  border-image-width: 10px;
+  border-image-slice: ${20};
+  border-image-width: ${10}px;
   border-image-repeat: stretch;
-  border-image-outset: 10px;
+  border-image-outset: 0;
   pointer-events: none;
 `,h=s.default.div.withConfig({displayName:"StyledSelectedIcon",componentId:"sc-11ryhsb"})`
   width: 100%;
@@ -176,7 +176,7 @@ var PickHtmlElement;(()=>{var t={958:t=>{self,t.exports=(()=>{var t={3426:(t,e,r
         `:s.css`
           opacity: 0;
         `};
-`;e.default=t=>{const[e,r]=u.useContext(l.SharedState),n=null===e.hoveredElement?null:e.hoveredElement.getBoundingClientRect(),o=null===n?null:{left:`${n.x}px`,top:`${n.y}px`,width:`${n.width}px`,height:`${n.height}px`};return a.h(f,{zIndex:t.zIndex,style:o},a.h(h,{visible:e.selectPreviewSelected}))}},235:function(t,e,r){"use strict";var n=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(e,"__esModule",{value:!0});const o=r(400),i=r(396),a=n(r(792)),u=r(124),s=r(686),c=a.default.div.withConfig({displayName:"StyledSelectSurface",componentId:"sc-1m60s40"})`
+`;e.default=t=>{const[e,r]=u.useContext(l.SharedState),n=u.useRef(null),o=u.useMemo((()=>null===e.hoveredElement?null:e.hoveredElement.getBoundingClientRect()),[e.hoveredElement]);return u.useEffect((()=>{var t;n.current.style.opacity="0",n.current.style.transition="none",null!==o&&(n.current.style.transform=(t=o).width>2e3||t.height>2e3?"scale(1)":"scale(1.1)",n.current.offsetHeight,n.current.style.transition="200ms opacity, 200ms transform",n.current.style.transform="scale(1)",n.current.style.opacity="1",n.current.style.left=`${o.x}px`,n.current.style.top=`${o.y}px`,n.current.style.width=`${o.width}px`,n.current.style.height=`${o.height}px`)}),[o]),a.h(f,{zIndex:t.zIndex,ref:n},a.h(h,{visible:e.selectPreviewSelected}))}},235:function(t,e,r){"use strict";var n=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(e,"__esModule",{value:!0});const o=r(400),i=r(396),a=n(r(792)),u=r(124),s=r(686),c=a.default.div.withConfig({displayName:"StyledSelectSurface",componentId:"sc-1m60s40"})`
   position: fixed;
   top: 0;
   left: 0;
