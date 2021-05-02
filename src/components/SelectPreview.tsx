@@ -6,13 +6,9 @@ import { SharedState } from '../contexts/SharedState'
 
 const StyledSelectPreview = styled.div<{
   zIndex: number
-  rectangle: { x: number; y: number; width: number; height: number }
+  style: any
 }>`
   position: fixed;
-  top: 300px;
-  left: 300px;
-  width: 300px;
-  height: 300px;
   background: url('${selectPreview}');
   background-size: 37px 37px;
   background-attachment: fixed;
@@ -43,9 +39,19 @@ const StyledSelectedIcon = styled.div<{ visible: boolean }>`
 
 const SelectPreview: FunctionComponent<any> = (props) => {
   const [state, _dispatch] = useContext(SharedState)
+  const hoveredElementRectangle = state.hoveredElement === null ? null : state.hoveredElement.getBoundingClientRect()
+  const selectPreviewStyle =
+    hoveredElementRectangle === null
+      ? null
+      : {
+          left: `${hoveredElementRectangle.x}px`,
+          top: `${hoveredElementRectangle.y}px`,
+          width: `${hoveredElementRectangle.width}px`,
+          height: `${hoveredElementRectangle.height}px`
+        }
 
   return (
-    <StyledSelectPreview zIndex={props.zIndex} rectangle={state.selectPreviewRectangle}>
+    <StyledSelectPreview zIndex={props.zIndex} style={selectPreviewStyle}>
       <StyledSelectedIcon visible={state.selectPreviewSelected} />
     </StyledSelectPreview>
   )

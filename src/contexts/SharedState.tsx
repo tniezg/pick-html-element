@@ -5,9 +5,9 @@ const SharedState = createContext(null)
 
 const initialState = {
   brushVisible: true,
-  selectPreviewRectangle: null,
   selectPreviewSelected: false,
-  selectSurfaceElement: null
+  selectSurfaceElement: null,
+  hoveredElement: null
 }
 
 const reducer = (state, action) => {
@@ -18,6 +18,8 @@ const reducer = (state, action) => {
       return { ...state, brushVisible: payload }
     case 'setSelectSurfaceElement':
       return { ...state, selectSurfaceElement: payload }
+    case 'setHoveredElement':
+      return { ...state, hoveredElement: payload }
     default:
       throw new Error(`Reducer action type not recognized ${type}.`)
   }

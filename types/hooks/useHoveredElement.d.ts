@@ -3,5 +3,5 @@ declare const useHoveredElement: (rectangle: {
     viewportY: number;
     width: number;
     height: number;
-}, ignoredElements: Element[]) => void;
+}, ignoredElements: Element[]) => any;
 export default useHoveredElement;

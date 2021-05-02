@@ -86,7 +86,7 @@ const Brush: FunctionComponent<any> = (props) => {
   const [radius, setRadius] = useState(initialRadius)
   const [position, setPosition] = useState(null)
   const [rectangle, setRectangle] = useState(null)
-  const [state, _dispatch] = useContext(SharedState)
+  const [state, dispatch] = useContext(SharedState)
   const visible = state.brushVisible && position !== null
   const style = position === null ? null : { left: `${position.viewportX}px`, top: `${position.viewportY}px` }
 
@@ -159,7 +159,9 @@ const Brush: FunctionComponent<any> = (props) => {
     return state.selectSurfaceElement === null ? [] : [state.selectSurfaceElement]
   }, [state.selectSurfaceElement])
 
-  useHoveredElement(rectangle, hoveredElementIgnoredElements)
+  const hoveredElement = useHoveredElement(rectangle, hoveredElementIgnoredElements)
+
+  useEffect(() => void dispatch({ type: 'setHoveredElement', payload: hoveredElement }), [hoveredElement])
 
   return <StyledBrush radius={radius} visible={visible} style={style} zIndex={props.zIndex} />
 }

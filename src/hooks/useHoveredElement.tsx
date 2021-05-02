@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from 'preact/hooks'
+import { useCallback, useContext, useEffect, useState } from 'preact/hooks'
 import getCssSelector from 'css-selector-generator'
 import { debounce } from 'debounce'
 import { ThemeContext } from 'styled-components'
@@ -8,21 +8,52 @@ const useHoveredElement = (
   ignoredElements: Element[]
 ) => {
   const theme = useContext(ThemeContext)
+  const [hoveredElement, setHoveredElement] = useState(null)
 
   const findElementFromRectangle = (rectangle, ignoredElements) => {
     const elements = document.elementsFromPoint(rectangle.viewportX, rectangle.viewportY)
 
-    const bestElementToRectangleFit =
-      elements.find((candidateElement) => {
+    const bestElementToRectangleFit = elements.reduce(
+      (
+        {
+          element: bestElementToRectangleFitCandidate,
+          area: bestElementToRectangleFitCandidateArea
+        }: { element: Element; area: number | null },
+        candidateElement
+      ) => {
         const candidateElementRectangle = candidateElement.getBoundingClientRect()
+        // elementsFromPoint sometimes returns inaccurate results.
+        // Make sure rectangle fully overlaps candidateElement.
 
-        // Only check right and bottom edges. Left and top edges are already checked by elementsFromPoint earlier.
-        return (
-          !ignoredElements.includes(candidateElement) &&
-          candidateElementRectangle.x + candidateElementRectangle.width >= rectangle.viewportX + rectangle.width &&
-          candidateElementRectangle.y + candidateElementRectangle.height >= rectangle.viewportY + rectangle.height
-        )
-      }) || document.body
+        if (
+          !(
+            !ignoredElements.includes(candidateElement) &&
+            candidateElementRectangle.x <= rectangle.viewportX &&
+            candidateElementRectangle.y <= rectangle.viewportY &&
+            candidateElementRectangle.x + candidateElementRectangle.width >= rectangle.viewportX + rectangle.width &&
+            candidateElementRectangle.y + candidateElementRectangle.height >= rectangle.viewportY + rectangle.height
+          )
+        ) {
+          return { element: bestElementToRectangleFitCandidate, area: bestElementToRectangleFitCandidateArea }
+        }
+
+        // The order of elements returned by elementsFromPoint may not be the best.
+        // To find the best element, calculate the area of all elements returned by
+        // elementsFromPoint which also cover the rectangle.
+
+        const candidateElementArea = candidateElementRectangle.width * candidateElementRectangle.height
+
+        if (
+          bestElementToRectangleFitCandidateArea === null ||
+          bestElementToRectangleFitCandidateArea > candidateElementArea
+        ) {
+          return { element: candidateElement, area: candidateElementArea }
+        }
+
+        return { element: bestElementToRectangleFitCandidate, area: bestElementToRectangleFitCandidateArea }
+      },
+      { element: document.body, area: null }
+    ).element
 
     return bestElementToRectangleFit
   }
@@ -31,29 +62,19 @@ const useHoveredElement = (
     // updatePickElement and ignoredElements are never recreated due to using `debounce`.
     // So, provide them as arguments to the function instead.
 
-    //   const pageX = event.pageX
-    //   const pageY = event.pageY
-
     if (rectangle === null) {
-      // TODO: Handle null.
+      setHoveredElement(null)
       return
     }
 
-    // const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-    // const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-
-    // TODO: Remove below
-    // const pageX = 0
-    // const pageY = 0
-    // const viewportX = rectangle.viewportX
-    // const viewportY = rectangle.viewportY
-
-    const element = findElementFromRectangle(rectangle, ignoredElements)
+    setHoveredElement(findElementFromRectangle(rectangle, ignoredElements))
   }
 
   const debouncedUpdatePickElement = useCallback(debounce(updatePickElement, theme.selectionUpdateDelay), [])
 
   useEffect(() => void debouncedUpdatePickElement(rectangle, ignoredElements), [rectangle, ignoredElements])
+
+  return hoveredElement
 }
 
 export default useHoveredElement
