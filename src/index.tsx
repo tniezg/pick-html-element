@@ -5,10 +5,6 @@ import App from './components/App'
 // import { debounce } from 'debounce'
 // import pick from 'lodash/pick'
 // import values from 'lodash/values'
-// import { createBrush } from './elements/createBrush'
-// import { createGlass } from './elements/createGlass'
-// import { createPageElementHighlight } from './elements/createPageElementHighlight'
-// import { createTooltips } from './elements/createTooltips'
 // import {
 //   CreateBrushReturn,
 //   CreatePageElementHighlightReturn,
@@ -160,30 +156,10 @@ import App from './components/App'
 //   return {}
 // }
 
-// const appendAllTo = (instances, parent) => {
-//   instances.forEach((instance) => {
-//     instance.append(parent)
-//   })
-// }
-
-// const removeAll = (instances) => {
-//   instances.forEach((instance) => {
-//     instance.remove()
-//   })
-// }
-
-// const updateBrushPosition = (brush: CreateBrushReturn, x: number, y: number): void => {
-//   brush.setPosition(x, y)
-// }
-
 // const createState = (options): State => {
 //   const { tint, alternativeControls } = options
 
 //   return {
-//     brush: createBrush({ color: tint }),
-//     glass: createGlass(),
-//     pageElementHighlight: createPageElementHighlight({ color: tint }),
-//     tooltips: createTooltips({ alternativeControls }),
 //     baseBrushRadius: 50,
 //     brushRadiusMultiplier: 1,
 //     lastMouseEvent: null,
@@ -194,14 +170,8 @@ import App from './components/App'
 
 // const createOnMouseMoveListener = (state: State, updateStateElementSelector) => (event: MouseEvent): void => {
 //   state.lastMouseEvent = event
-//   updateBrushPosition(state.brush, event.pageX, event.pageY)
-//   debouncedUpdatePickElement(event, state.brush.getRadius(), state.pageElementHighlight, updateStateElementSelector)
 
-//   if (state.tooltips.hits(event.clientX, event.clientY)) {
-//     state.tooltips.hide()
-//   } else {
-//     state.tooltips.show()
-//   }
+//   debouncedUpdatePickElement(event, state.brush.getRadius(), state.pageElementHighlight, updateStateElementSelector)
 // }
 
 // const createOnMouseMoveOnceListener = (state: State, listeners) => (): void => {
@@ -363,8 +333,6 @@ import App from './components/App'
 //   //     hijackPointerEvents: options.hijackPointerEvents
 //   //   })
 //   // })
-
-//   state.brush.setRadius(state.baseBrushRadius)
 
 //   // if (document.hasFocus()) {
 //   //   document.addEventListener('mousemove', listeners.onMouseMoveOnce, { once: true })
