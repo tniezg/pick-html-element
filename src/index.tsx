@@ -31,34 +31,6 @@ import App from './components/App'
 //   })
 // }
 
-// const findElementFromBrush = (
-//   viewportX: number,
-//   viewportY: number,
-//   pageX: number,
-//   pageY: number,
-//   scrollLeft: number,
-//   scrollTop: number,
-//   brushRadius: number
-// ): Element => {
-//   const elements = document.elementsFromPoint(viewportX, viewportY)
-//   const brushX = pageX
-//   const brushY = pageY
-
-//   const element =
-//     elements.find((element) => {
-//       const elementRectangle = element.getBoundingClientRect()
-
-//       return (
-//         brushX - brushRadius >= elementRectangle.x + scrollLeft &&
-//         brushX + brushRadius <= elementRectangle.x + scrollLeft + elementRectangle.width &&
-//         brushY - brushRadius >= elementRectangle.y + scrollTop &&
-//         brushY + brushRadius <= elementRectangle.y + scrollTop + elementRectangle.height
-//       )
-//     }) || document.body
-
-//   return element
-// }
-
 // const highlightElement = (
 //   element: Element,
 //   scrollLeft: number,
@@ -77,16 +49,6 @@ import App from './components/App'
 //   pageElementHighlight: CreatePageElementHighlightReturn,
 //   elementSelectorChangeCallback: ElementSelectorChangeCallback
 // ): void => {
-//   const pageX = event.pageX
-//   const pageY = event.pageY
-
-//   const viewportX = event.clientX
-//   const viewportY = event.clientY
-
-//   const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-//   const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-
-//   const element = findElementFromBrush(viewportX, viewportY, pageX, pageY, scrollLeft, scrollTop, brushRadius)
 
 //   const elementSelector = getSelector(element)
 
@@ -369,11 +331,7 @@ import App from './components/App'
 const create = (customOptions: any = {}) => {
   // TODO: Replace any
   const defaultOptions = CONFIG.defaultCreateOptions
-  // TODO: Use options
-  const options = {
-    ...defaultOptions,
-    ...customOptions
-  }
+  const options = { ...defaultOptions, ...customOptions }
 
   let rootElement = null
 
@@ -387,7 +345,7 @@ const create = (customOptions: any = {}) => {
       rootElement = document.createElement('div')
       document.body.appendChild(rootElement)
 
-      render(<App theme={options.theme} />, rootElement)
+      render(<App theme={options} />, rootElement)
     },
     destroy: (): void => {
       if (rootElement !== null) {

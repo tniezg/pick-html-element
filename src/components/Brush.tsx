@@ -1,10 +1,11 @@
 import { FunctionComponent, h } from 'preact'
-import { useContext, useEffect, useState } from 'preact/hooks'
+import { useContext, useEffect, useMemo, useState } from 'preact/hooks'
 import styled, { css, keyframes } from 'styled-components'
 import { ActionType } from '../interfaces'
 import { brushMagnifyingGlass } from '../utilities/images'
 import stopEvent from '../utilities/stopEvent'
-import { Context } from './App'
+import { SharedState } from '../contexts/SharedState'
+import useHoveredElement from '../hooks/useHoveredElement'
 
 const getBrushRadiusFromMultiplier = (baseBrushRadius: number, radiusMultiplier: number): number =>
   Math.round(baseBrushRadius * (1 / Math.pow(radiusMultiplier, 2)))
@@ -84,9 +85,10 @@ const Brush: FunctionComponent<any> = (props) => {
   const [brushRadiusMultiplier, setBrushRadiusMultiplier] = useState(initialBrushRadiusMultiplier)
   const [radius, setRadius] = useState(initialRadius)
   const [position, setPosition] = useState(null)
-  const [state, _dispatch] = useContext(Context)
+  const [rectangle, setRectangle] = useState(null)
+  const [state, _dispatch] = useContext(SharedState)
   const visible = state.brushVisible && position !== null
-  const style = position === null ? null : { left: `${position.x}px`, top: `${position.y}px` }
+  const style = position === null ? null : { left: `${position.viewportX}px`, top: `${position.viewportY}px` }
 
   const increaseRadius = () => {
     const newBrushRadiusMultiplier = brushRadiusMultiplier - brushRadiusMultiplierStep
@@ -123,10 +125,10 @@ const Brush: FunctionComponent<any> = (props) => {
   }
 
   const onMouseMove = (event: MouseEvent) => {
-    const x = event.clientX
-    const y = event.clientY
+    const viewportX = event.clientX
+    const viewportY = event.clientY
 
-    setPosition({ x, y })
+    setPosition({ viewportX, viewportY })
     stopEvent(event)
   }
 
@@ -139,6 +141,25 @@ const Brush: FunctionComponent<any> = (props) => {
       window.removeEventListener('mousemove', onMouseMove, true)
     }
   }, [brushRadiusMultiplier])
+
+  useEffect(() => {
+    if (position !== null) {
+      setRectangle({
+        viewportX: position.viewportX - radius,
+        viewportY: position.viewportY - radius,
+        width: radius * 2,
+        height: radius * 2
+      })
+    } else {
+      setRectangle(null)
+    }
+  }, [position, radius])
+
+  const hoveredElementIgnoredElements = useMemo(() => {
+    return state.selectSurfaceElement === null ? [] : [state.selectSurfaceElement]
+  }, [state.selectSurfaceElement])
+
+  useHoveredElement(rectangle, hoveredElementIgnoredElements)
 
   return <StyledBrush radius={radius} visible={visible} style={style} zIndex={props.zIndex} />
 }

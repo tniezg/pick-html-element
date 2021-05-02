@@ -4,8 +4,7 @@
   browserGlobal: 'PickHtmlElement',
   elementSelectEventName: 'pickHtmlElementScriptElementSelect',
   defaultCreateOptions: {
-    theme: {
-      primaryColor: '#04C300'
-    }
+    selectionUpdateDelay: 200,
+    primaryColor: '#04C300'
   }
 }

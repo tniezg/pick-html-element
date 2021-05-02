@@ -1,7 +1,8 @@
 import { FunctionComponent, h } from 'preact'
+import { useContext, useCallback } from 'preact/hooks'
 import styled from 'styled-components'
+import { SharedState } from '../contexts/SharedState'
 import { selectSurface } from '../utilities/images'
-import maxZIndex from '../utilities/maxZIndex'
 
 const StyledSelectSurface = styled.div<{ zIndex: number }>`
   position: fixed;
@@ -16,7 +17,12 @@ const StyledSelectSurface = styled.div<{ zIndex: number }>`
 `
 
 const SelectSurface: FunctionComponent<any> = (props) => {
-  return <StyledSelectSurface zIndex={props.zIndex} />
+  const [_state, dispatch] = useContext(SharedState)
+  const selectSurfaceRef = useCallback((selectSurfaceElement) => {
+    dispatch({ type: 'setSelectSurfaceElement', payload: selectSurfaceElement })
+  }, [])
+
+  return <StyledSelectSurface ref={selectSurfaceRef} zIndex={props.zIndex} />
 }
 
 export default SelectSurface

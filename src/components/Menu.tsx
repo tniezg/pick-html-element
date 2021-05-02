@@ -5,7 +5,7 @@ import { useContext, useState } from 'preact/hooks'
 import styled, { css } from 'styled-components'
 import { expandIcon, menuBorder, shrinkIcon } from '../utilities/images'
 import { mix, withFullWidthBlock } from '../utilities/styledComponentsMixins'
-import { Context } from './App'
+import { SharedState } from '../contexts/SharedState'
 
 const expandedMenuWidth = 186
 const shrunkMenuWidth = 80
@@ -172,7 +172,7 @@ const StyledMenuResizeButton = mix(
 
 const Menu: FunctionComponent<any> = (props) => {
   const [expanded, setExpanded] = useState(true)
-  const [_state, dispatch] = useContext(Context)
+  const [_state, dispatch] = useContext(SharedState)
 
   const onMouseEnter = (_event: MouseEvent) => void dispatch({ type: 'setBrushVisible', payload: false })
   const onMouseLeave = (_event: MouseEvent) => void dispatch({ type: 'setBrushVisible', payload: true })

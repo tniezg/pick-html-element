@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact'
 import { useContext } from 'preact/hooks'
 import styled, { css } from 'styled-components'
 import { selectedIcon, selectPreview, selectPreviewBorder } from '../utilities/images'
-import { Context } from './App'
+import { SharedState } from '../contexts/SharedState'
 
 const StyledSelectPreview = styled.div<{
   zIndex: number
@@ -24,13 +24,13 @@ const StyledSelectPreview = styled.div<{
   border-image-width: 10px;
   border-image-repeat: stretch;
   border-image-outset: 10px;
+  pointer-events: none;
 `
 
 const StyledSelectedIcon = styled.div<{ visible: boolean }>`
   width: 100%;
   height: 100%;
   background: url('${selectedIcon}') no-repeat center;
-  pointer-events: none;
   ${({ visible }) =>
     visible
       ? css`
@@ -42,7 +42,7 @@ const StyledSelectedIcon = styled.div<{ visible: boolean }>`
 `
 
 const SelectPreview: FunctionComponent<any> = (props) => {
-  const [state, _dispatch] = useContext(Context)
+  const [state, _dispatch] = useContext(SharedState)
 
   return (
     <StyledSelectPreview zIndex={props.zIndex} rectangle={state.selectPreviewRectangle}>
