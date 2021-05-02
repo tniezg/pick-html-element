@@ -1,7 +1,3 @@
 import { FunctionComponent } from 'preact';
-export declare enum ActionType {
-    BrushIncrease = 0,
-    BrushDecrease = 1
-}
-declare const Brush: FunctionComponent;
+declare const Brush: FunctionComponent<any>;
 export default Brush;

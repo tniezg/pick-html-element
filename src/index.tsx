@@ -342,14 +342,6 @@ import App from './components/App'
 // }
 
 // const init = (customOptions: InitOptions) => {
-//   const defaultOptions: InitOptions = {
-//     alternativeControls: true,
-//   }
-
-//   const state = createState({
-//     alternativeControls: options.alternativeControls,
-//   })
-
 //   // const updateStateElementSelector = (elementSelector: string, element: Element): void => {
 //   //   state.elementSelector = elementSelector
 //   //   state.element = element
@@ -371,8 +363,6 @@ import App from './components/App'
 //   //     hijackPointerEvents: options.hijackPointerEvents
 //   //   })
 //   // })
-
-//   appendAllTo(values(pick(state, ['glass', 'brush', 'pageElementHighlight', 'tooltips'])), document.body)
 
 //   state.brush.setRadius(state.baseBrushRadius)
 

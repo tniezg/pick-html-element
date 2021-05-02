@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
 import styled, { css, keyframes } from 'styled-components'
+import { ActionType } from '../interfaces'
 import { brushMagnifyingGlass } from '../utilities/images'
-import maxZIndex from '../utilities/maxZIndex'
 import stopEvent from '../utilities/stopEvent'
 import { Context } from './App'
 
@@ -15,11 +15,7 @@ const initialRadius = getBrushRadiusFromMultiplier(baseBrushRadius, initialBrush
 
 const brushRadiusMultiplierStep = 0.2
 
-// TODO: move to interfaces folder
-export enum ActionType {
-  BrushIncrease,
-  BrushDecrease
-}
+const pulseWidth = 8
 
 const recognizeKeyboardEvent = (event: KeyboardEvent): ActionType => {
   const keyMapping = {
@@ -34,28 +30,26 @@ const recognizeKeyboardEvent = (event: KeyboardEvent): ActionType => {
 
 const pulsate = keyframes`
   0% {
-    left: -2px;
-    top: -2px;
-    border-width: 2px;
-    opacity: 1;
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  15% {
+    opacity: 0.5;
   }
 
   30% {
-    left: -20px;
-    top: -20px;
-    border-width: 20px;
     opacity: 0;
+    transform: scale(1.2);
   }
 
   100% {
-    left: -20px;
-    top: -20px;
-    border-width: 20px;
     opacity: 0;
+    transform: scale(1.2);
   }
 `
 
-const StyledBrush = styled.div<{ radius: number; visible: boolean }>`
+const StyledBrush = styled.div<{ radius: number; visible: boolean; zIndex: number }>`
   background: #000 url('${brushMagnifyingGlass}') center no-repeat;
   background-size: ${(props) => Math.min(props.radius * 2 * 0.4, 47)}px;
   opacity: ${({ visible }) => (visible ? 0.5 : 0)};
@@ -64,7 +58,7 @@ const StyledBrush = styled.div<{ radius: number; visible: boolean }>`
   transform: translate(-50%, -50%);
   transition: 200ms width, 200ms height, 200ms background-size, 200ms opacity;
   pointer-events: none;
-  z-index: ${maxZIndex};
+  z-index: ${({ zIndex }) => zIndex};
   ${({ radius }) => css`
     width: ${radius * 2}px;
     height: ${radius * 2}px;
@@ -75,26 +69,22 @@ const StyledBrush = styled.div<{ radius: number; visible: boolean }>`
     position: relative;
     display: block;
     box-sizing: content-box;
-    left: 0;
-    top: 0;
+    left: -${pulseWidth}px;
+    top: -${pulseWidth}px;
     border-radius: 50%;
-    border: 0px solid ${({ theme }) => theme.primaryColor};
+    border: ${pulseWidth}px solid #000;
+    opacity: 1;
     animation: 2s ${pulsate} ease-out infinite;
-    transition: 200ms width, 200ms height;
-    ${({ radius }) => css`
-      width: ${radius * 2}px;
-      height: ${radius * 2}px;
-    `}
+    width: 100%;
+    height: 100%;
   }
 `
 
-// TODO: Hide Brush when cursor is over Menu. Use singleton state to track mouseover Menu.
-
-const Brush: FunctionComponent = () => {
+const Brush: FunctionComponent<any> = (props) => {
   const [brushRadiusMultiplier, setBrushRadiusMultiplier] = useState(initialBrushRadiusMultiplier)
   const [radius, setRadius] = useState(initialRadius)
   const [position, setPosition] = useState(null)
-  const [state, dispatch] = useContext(Context)
+  const [state, _dispatch] = useContext(Context)
   const visible = state.brushVisible && position !== null
   const style = position === null ? null : { left: `${position.x}px`, top: `${position.y}px` }
 
@@ -150,7 +140,7 @@ const Brush: FunctionComponent = () => {
     }
   }, [brushRadiusMultiplier])
 
-  return <StyledBrush radius={radius} visible={visible} style={style} />
+  return <StyledBrush radius={radius} visible={visible} style={style} zIndex={props.zIndex} />
 }
 
 export default Brush

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { useContext, useState } from 'preact/hooks'
 import styled, { css } from 'styled-components'
 import { expandIcon, menuBorder, shrinkIcon } from '../utilities/images'
-import maxZIndex from '../utilities/maxZIndex'
 import { mix, withFullWidthBlock } from '../utilities/styledComponentsMixins'
 import { Context } from './App'
 
@@ -29,7 +28,7 @@ const StyledMenu = styled.div<any>`
   border-image-width: 16px;
   border-image-repeat: stretch;
   border-image-outset: 16px;
-  z-index: ${maxZIndex - 1};
+  z-index: ${({ zIndex }) => zIndex};
   overflow: hidden;
   box-sizing: content-box;
   ${({ expanded }) =>
@@ -171,7 +170,7 @@ const StyledMenuResizeButton = mix(
   `
 )
 
-const Menu: FunctionComponent = () => {
+const Menu: FunctionComponent<any> = (props) => {
   const [expanded, setExpanded] = useState(true)
   const [_state, dispatch] = useContext(Context)
 
@@ -179,7 +178,7 @@ const Menu: FunctionComponent = () => {
   const onMouseLeave = (_event: MouseEvent) => void dispatch({ type: 'setBrushVisible', payload: true })
 
   return (
-    <StyledMenu expanded={expanded} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <StyledMenu expanded={expanded} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} zIndex={props.zIndex}>
       <StyledContent expanded={expanded}>
         <StyledHeading role="heading" aria-level={6}>
           You're selecting elements on the website
