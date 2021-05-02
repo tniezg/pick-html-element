@@ -1,4 +1,4 @@
-declare const create: (customOptions: any) => {
+declare const create: (customOptions?: any) => {
     init: () => void;
     destroy: () => void;
     isActive: () => boolean;

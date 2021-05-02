@@ -398,7 +398,7 @@ import App from './components/App'
 //   }
 // }
 
-const create = (customOptions: any) => {
+const create = (customOptions: any = {}) => {
   // TODO: Replace any
   const defaultOptions = CONFIG.defaultCreateOptions
   // TODO: Use options
@@ -419,7 +419,7 @@ const create = (customOptions: any) => {
       rootElement = document.createElement('div')
       document.body.appendChild(rootElement)
 
-      render(<App />, rootElement)
+      render(<App theme={options.theme} />, rootElement)
     },
     destroy: (): void => {
       if (rootElement !== null) {

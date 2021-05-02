@@ -1,6 +1,5 @@
 import { createContext, FunctionComponent, h } from 'preact'
 import { ThemeProvider } from 'styled-components'
-import defaultTheme from '../utilities/defaultTheme'
 import SelectSurface from './SelectSurface'
 import Menu from './Menu'
 import Brush from './Brush'
@@ -29,12 +28,12 @@ const reducer = (_state, action) => {
   }
 }
 
-const App: FunctionComponent = () => {
+const App: FunctionComponent<any> = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   let zIndex = maxZIndex
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={props.theme}>
       <Context.Provider value={[state, dispatch]}>
         <div>
           {/* TODO: Add <RefocusRequest/> */}

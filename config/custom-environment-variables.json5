@@ -1,4 +1,6 @@
+// You need to restart `npm run build:server` for changes in this file to take effect.
+
 {
-  "browserGlobal": "BROWSER_GLOBAL",
-  "elementSelectEventName": "ELEMENT_SELECT_EVENT_NAME"
+  browserGlobal: 'BROWSER_GLOBAL',
+  elementSelectEventName: 'ELEMENT_SELECT_EVENT_NAME'
 }

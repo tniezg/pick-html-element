@@ -1,7 +1,11 @@
+// You need to restart `npm run build:server` for changes in this file to take effect.
+
 {
-  "browserGlobal": "PickHtmlElement",
-  "elementSelectEventName": "pickHtmlElementScriptElementSelect",
-  "defaultCreateOptions": {
-    "tint": "#ff3300"
+  browserGlobal: 'PickHtmlElement',
+  elementSelectEventName: 'pickHtmlElementScriptElementSelect',
+  defaultCreateOptions: {
+    theme: {
+      primaryColor: '#04C300'
+    }
   }
 }
